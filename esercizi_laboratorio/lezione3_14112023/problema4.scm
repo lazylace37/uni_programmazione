@@ -9,59 +9,60 @@
 
 #lang scheme
 
-(define btr-carry                        ; val:     carattere +/./-
+;; Questa procedura ritorna il riporto
+(define btr-carry                        ; val:     carattere +/./- riporto
   (lambda (u v c)                        ; u, v, c: caratteri +/./-
     (cond ((char=? u #\-)                ; u v c
            (cond ((char=? v #\-)
                   (cond ((char=? c #\-)  ; - - -
-                         #\.)
+                         #\-)
                         ((char=? c #\.)  ; - - .
-                         #\+)
+                         #\-)
                         ((char=? c #\+)  ; - - +
-                         #\-)))
+                         #\.)))
                  ((char=? v #\.)
                   (cond ((char=? c #\-)  ; - . -
-                         #\+)
-                        ((char=? c #\.)  ; - . .
                          #\-)
+                        ((char=? c #\.)  ; - . .
+                         #\.)
                         ((char=? c #\+)  ; - . +
                          #\.)))
                  ((char=? v #\+)         ; - + c
-                  c)))
+                  #\.)))
           ((char=? u #\.)
            (cond ((char=? v #\-)
                   (cond ((char=? c #\-)  ; . - -
-                         #\+)
-                        ((char=? c #\.)  ; . - .
                          #\-)
+                        ((char=? c #\.)  ; . - .
+                         #\.)
                         ((char=? c #\+)  ; . - +
                          #\.)))
                  ((char=? v #\.)         ; . . c
-                  c)
+                  #\.)
                  ((char=? v #\+)
                   (cond ((char=? c #\-)  ; . + -
                          #\.)
                         ((char=? c #\.)  ; . + .
-                         #\+)
+                         #\.)
                         ((char=? c #\+)  ; . + +
-                         #\-)))))
+                         #\+)))))
           ((char=? u #\+)
            (cond ((char=? v #\-)         ; + - c
-                  c)
+                  #\.)
                  ((char=? v #\.)
                   (cond ((char=? c #\-)  ; + . -
                          #\.)
                         ((char=? c #\.)  ; + . .
-                         #\+)
+                         #\.)
                         ((char=? c #\+)  ; + . +
-                         #\-)))
+                         #\+)))
                  ((char=? v #\+)
                   (cond ((char=? c #\-)  ; + + -
-                         #\+)
+                         #\.)
                         ((char=? c #\.)  ; + + .
-                         #\-)
+                         #\+)
                         ((char=? c #\+)  ; + + +
-                         #\.)))))
+                         #\+)))))
           )))
 
 ;; Somma di tre cifre nel sistema ternario bilanciato (caratteri):
@@ -72,8 +73,6 @@
 ;;
 ;; Il riporto va considerato a parte,
 ;; definendo una procedura "carry" con analoga struttura per casi.
-
-
 (define btr-digit-sum                    ; val:     carattere +/./-
   (lambda (u v c)                        ; u, v, c: caratteri +/./-
     (cond ((char=? u #\-)                ; u v c
@@ -129,6 +128,8 @@
                          #\.)))))
           )))
 
+;; data una rappresentazione BTR (stringa), restituisce la parte che precede l’ultima
+;; cifra (stringa) oppure la stringa vuota ("") se l’argomento è la stringa vuota
 (define head    ; val: stringa
   (lambda (s)   ; s: stringa
     (cond
@@ -137,36 +138,47 @@
       )
     ))
 
-(define lsd
-  (lambda (s)
+;; data una rappresentazione BTR (stringa), restituisce la cifra meno significativa
+;; (carattere) oppure zero (#\.) se l’argomento è la stringa vuota
+(define lsd     ; val: carattere
+  (lambda (s)   ; s: stringa
     (if (string=? s "") #\. (string-ref s (- (string-length s) 1)))
     ))
 
+;; data una rappresentazione BTR (stringa), restituisce la rappresentazione non vuota
+;; equivalente in cui le eventuali cifre zero (#\.) in testa, ininfluenti, sono rimosse
 (define normalized-btr
   (lambda (s)
     (cond
-      ((string=? s "") s)
+      ((= (string-length s) 1) s)
       ((char=? (string-ref s 0) #\.) (normalized-btr (substring s 1)))
       (else s)
       )
     ))
 
+;; date le rappresentazioni BTR di due interi (stringhe) e il riporto in entrata (carattere),
+;; restituisce la rappresentazione BTR della somma inclusiva del riporto
 (define btr-carry-sum
   (lambda (u v c)        ; u v: stringhe BTR, c: carattere carry
     (if (and (string=? u "") (string=? v ""))
         ""
-        (string-append (btr-digit-sum (lsd u) (lsd v) c) (btr-carry-sum (head u) (head v) #\0))
+        (string-append
+         (btr-carry-sum (head u) (head v) (btr-carry (lsd u) (lsd v) c))
+         (string (btr-digit-sum (lsd u) (lsd v) c))
+         )
         )
     ))
 
+;; la procedura principale
 (define btr-sum    ; val: stringa somma
   (lambda (u v)  ; u, v: stringhe addendi
-    (btr-carry-sum u v #\0)
+    (normalized-btr (btr-carry-sum u v #\.))
     ))
 
-;; (btr-sum "-+--" "+")
+(btr-sum "-+--" "+")
 (btr-sum "-+--" "-")
-;; (btr-sum "+-.+" "-+.-")
-;; (btr-sum "-+--+" "-.--")
-;; (btr-sum "-+-+." "-.-+")
-;; (btr-sum "+-+-." "+.+-")
+(btr-sum "+-.+" "-+.-")
+(btr-sum "-+--+" "-.--")
+(btr-sum "-+-+." "-.-+")
+(btr-sum "+-+-." "+.+-")
+
