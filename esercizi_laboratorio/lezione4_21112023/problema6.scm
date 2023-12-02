@@ -55,14 +55,16 @@
 
 (set-tessellation-shift-step!)
 
+;; Procedura che ritorna la regione tassellata di lato "l" di figura "tile"
 (define draw-region           ; val: regione di lunghezza del lato più corto l tassellata
-  (lambda (l tile)            ; l: la lunghezza del lato più corto della regione, tile: immagine di una regione
+  (lambda (l tile)            ; l: la lunghezza del lato più corto della regione, tile: figura
     (glue-tiles
      (glue-tiles (shift-right (shift-down tile (/ l 2)) (/ l 2)) (shift-down (quarter-turn-left tile) l))
      (glue-tiles tile (shift-right (quarter-turn-right tile) l))
      )
     ))
 
+;; Procedura che ritorna, a partire dalla lunghezza del lato più corto della regione da coprire, l'immagine della regione tassellata
 (define L-tessellation   ; val: l'"immagine" della regione tassellata
   (lambda (l)            ; l: la lunghezza del lato più corto della regione da coprire, che si assume sia una potenza di due
     (cond

@@ -9,7 +9,9 @@
 
 #lang scheme
 
-;; Questa procedura ritorna il riporto
+;; Questa procedura calcola il riporto della somma di tre cifre nel sistema ternario bilanciato (caratteri):
+;; - u, v rappresentano le cifre "incolonnate",
+;; - c rappresenta il riporto "in entrata";
 (define btr-carry                        ; val:     carattere +/./- riporto
   (lambda (u v c)                        ; u, v, c: caratteri +/./-
     (cond ((char=? u #\-)                ; u v c
@@ -169,7 +171,7 @@
         )
     ))
 
-;; la procedura principale
+;; la procedura principale, ritorna la somma di due stringhe in notazione BTR
 (define btr-sum    ; val: stringa somma
   (lambda (u v)  ; u, v: stringhe addendi
     (normalized-btr (btr-carry-sum u v #\.))

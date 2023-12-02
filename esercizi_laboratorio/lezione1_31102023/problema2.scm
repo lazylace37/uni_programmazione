@@ -44,17 +44,31 @@
 
 (set-puzzle-shift-step!)
 
+;; Utilizzando gli strumenti a disposizione, scrivi due espressioni in Scheme che risolvano le due versioni del rompicapo,
+;; restituendo rispettivamente l’immagine di una croce regolare e l’immagine di un quadrato.
+
+;; Procedura ricorsiva che incolla una lista di figure
 (define glue-tiles-list
   (lambda args
     (cond
-      ((= (length args) 1) (first args))
+      ((= (length args) 1) (car args))
       (else
-       (glue-tiles (first args) (apply glue-tiles-list (list-tail args 1)))
+       (glue-tiles (car args) (apply glue-tiles-list (cdr args)))
        )
       )
     )
   )
 
+;; Quadrato un po' inclinato
+(glue-tiles-list
+ (shift-right  (quarter-turn-right larger-tile) 1)
+ (shift-down (quarter-turn-left larger-tile) 2)
+
+ (shift-down (quarter-turn-left smaller-tile) 2)
+ (shift-down (shift-right (quarter-turn-right smaller-tile) 5) 2)
+ )
+
+;; Croce regolare
 (glue-tiles-list
  (half-turn larger-tile)
  (shift-down (shift-right larger-tile 2) 1)
@@ -63,10 +77,3 @@
  (shift-down (shift-right (half-turn smaller-tile) 2) 0)
  )
 
-(glue-tiles-list
- (shift-right  (quarter-turn-right larger-tile) 1)
- (shift-down (quarter-turn-left larger-tile) 2)
-
- (shift-down (quarter-turn-left smaller-tile) 2)
- (shift-down (shift-right (quarter-turn-right smaller-tile) 5) 2)
- )
