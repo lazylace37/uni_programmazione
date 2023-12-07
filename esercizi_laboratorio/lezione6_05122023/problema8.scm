@@ -2,22 +2,31 @@
 
 (require "hanoi.ss")
 
-(define hanoi-disks-rec
-  (lambda (n k ds dd dt)
+; Procedura che aggiunge un disco all'asticella in base alla
+; dimensione del disco e all'iterazione k desiderata
+(define hanoi-disks-rec    ; val: configurazione all'iterazione k
+  (lambda (n k ds dd dt)   ; n:
     (cond
-      ((= n 0) (list ds dd dt))
-      ((< k (expt 2 (- n 1)))
+      ((= n 0) (list ds dd dt))      ; ritorno la configurazione
+      ((< k (expt 2 (- n 1)))        ; se k meno della metà di 2^(n-1)
+       ; aggiungo un elemento alla pile sorgente
        (hanoi-disks-rec (- n 1) k (cons (car ds) (cons (+ (car (cdr ds)) 1) null)) dt dd)
        )
-      (else ; (> k (- (expt 2 n) 1))
-       (if (< k (expt 2 (- n 2)))
-           (hanoi-disks-rec (- n 1) k dt (cons (car dd) (cons (+ (car (cdr dd)) 1) null)) ds)
-           (hanoi-disks-rec (- n 1) (- k (expt 2 (- n 1))) dt (cons (car dd) (cons (+ (car (cdr dd)) 1) null)) ds)
-           )
+      (else ; (>= k (- (expt 2 n) 1))
+       ; aggiungo un elemento alla pile destinazione
+       (hanoi-disks-rec
+        (- n 1)
+        (if (< k (expt 2 (- n 2))) k (- k (expt 2 (- n 1))))
+        dt
+        (cons (car dd) (cons (+ (car (cdr dd)) 1) null))
+        ds
+        )
        )
       )
     ))
 
+; Procedura che restituisce la configurazione della torre di Hanoi
+; con n dischi alla k-esima iterazione
 (define hanoi-disks    ; val: lista - configurazione alla k mossa
   (lambda (n k)        ; n: intero > 0, k: intero 0 <= k <= 2^n - 1
     (hanoi-disks-rec n k (list 1 0) (list 2 0) (list 3 0))
@@ -39,6 +48,8 @@
 ;; (ii) Definisci una procedura hanoi-picture che, dati due interi n, k, con n > 0 e 0 ≤ k ≤ 2n–1, restituisce
 ;; un’immagine della disposizione dei dischi al termine della k-ima mossa.
 
+; Procedura che aggiunge un disco all'asticella in base alla
+; dimensione del disco e all'iterazione k desiderata
 (define hanoi-disks-rec-pic
   (lambda (n d k ds dd dt acc-pic)
     (cond
@@ -56,10 +67,15 @@
            (
             (im (above (disk-image d n (car dd) (car (cdr dd))) acc-pic))
             )
-         (if (< k (expt 2 (- d 2)))
-             (hanoi-disks-rec-pic n (- d 1) k dt (cons (car dd) (cons (+ (car (cdr dd)) 1) null)) ds im)
-             (hanoi-disks-rec-pic n (- d 1) (- k (expt 2 (- d 1))) dt (cons (car dd) (cons (+ (car (cdr dd)) 1) null)) ds im)
-             )
+         (hanoi-disks-rec-pic
+          n
+          (- d 1)
+          (if (< k (expt 2 (- d 2))) k (- k (expt 2 (- d 1))))
+          dt
+          (cons (car dd) (cons (+ (car (cdr dd)) 1) null))
+          ds
+          im
+          )
          )
        )
       )
