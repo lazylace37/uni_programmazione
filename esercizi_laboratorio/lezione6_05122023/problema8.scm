@@ -2,18 +2,17 @@
 
 (require "hanoi.ss")
 
-; Procedura che aggiunge un disco all'asticella in base alla
-; dimensione del disco e all'iterazione k desiderata
+; Procedura che inserisce il disco di dimensione n nell'asticella corretta all'iterazione k
 (define hanoi-disks-rec    ; val: configurazione all'iterazione k
-  (lambda (n k ds dd dt)   ; n:
+  (lambda (n k ds dd dt)   ; n: intero > 0 dimensione disco, k: intero > 0 iterazione, ds, dd, dt: liste (posizione asticella, numero dischi)
     (cond
       ((= n 0) (list ds dd dt))      ; ritorno la configurazione
       ((< k (expt 2 (- n 1)))        ; se k meno della metà di 2^(n-1)
-       ; aggiungo un elemento alla pile sorgente
+       ; aggiungo un elemento all'asticella sorgente
        (hanoi-disks-rec (- n 1) k (cons (car ds) (cons (+ (car (cdr ds)) 1) null)) dt dd)
        )
       (else ; (>= k (- (expt 2 n) 1))
-       ; aggiungo un elemento alla pile destinazione
+       ; aggiungo un elemento all'asticella destinazione
        (hanoi-disks-rec
         (- n 1)
         (if (< k (expt 2 (- n 2))) k (- k (expt 2 (- n 1))))
@@ -48,25 +47,19 @@
 ;; (ii) Definisci una procedura hanoi-picture che, dati due interi n, k, con n > 0 e 0 ≤ k ≤ 2n–1, restituisce
 ;; un’immagine della disposizione dei dischi al termine della k-ima mossa.
 
-; Procedura che aggiunge un disco all'asticella in base alla
-; dimensione del disco e all'iterazione k desiderata
+; Procedura che inserisce il disco di dimensione n nell'asticella corretta all'iterazione k;
+; ritorna l'immagine finale
 (define hanoi-disks-rec-pic
   (lambda (n d k ds dd dt acc-pic)
     (cond
-      ((= d 0) acc-pic)
-      ((< k (expt 2 (- d 1)))
-       (let
-           (
-            (im (above (disk-image d n (car ds) (car (cdr ds))) acc-pic))
-            )
+      ((= d 0) acc-pic)           ; ritorna l'immagine
+      ((< k (expt 2 (- d 1)))     ; se k meno della metà di 2^(n-1)
+       (let ((im (above (disk-image d n (car ds) (car (cdr ds))) acc-pic)))
          (hanoi-disks-rec-pic n (- d 1) k (cons (car ds) (cons (+ (car (cdr ds)) 1) null)) dt dd im)
          )
        )
       (else ; (> k (- (expt 2 n) 1))
-       (let
-           (
-            (im (above (disk-image d n (car dd) (car (cdr dd))) acc-pic))
-            )
+       (let ((im (above (disk-image d n (car dd) (car (cdr dd))) acc-pic)))
          (hanoi-disks-rec-pic
           n
           (- d 1)
@@ -81,6 +74,7 @@
       )
     ))
 
+; Procedura che restituisce l'immagine della disposizione degli n dischi al termine della k-ima mossa
 (define hanoi-picture
   (lambda (n k)
     (hanoi-disks-rec-pic n n k (list 1 0) (list 2 0) (list 3 0) (towers-background n))
