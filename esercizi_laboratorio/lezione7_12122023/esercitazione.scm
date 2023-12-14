@@ -53,3 +53,42 @@
 
 (increment "1011" 2)
 
+;; 3
+;; Date le stringhe u, v, la procedura lcs calcola una soluzione del problema della sottosequenza comune più lunga. Il
+;; risultato è rappresentato da una lista di terne, ciascuna delle quali contiene le posizioni in u e in v di un carattere
+;; comune che fa parte della sottosequenza più lunga, numerate a partire da 1, e la stringa costituita dal solo carattere
+;; comune. Esempi:
+;; (lcs "pino" "pino") → ((1 1 "p") (2 2 "i") (3 3 "n") (4 4 "o"))
+;; (lcs "pelo" "peso") → ((1 1 "p") (2 2 "e") (4 4 "o"))
+;; (lcs "ala" "palato") → ((1 2 "a") (2 3 "l") (3 4 "a"))
+;; (lcs "arto" "atrio") → ((1 1 "a") (3 2 "t") (4 5 "o"))
+;; In particolare, nell’ultimo esempio (3 2 "t") contiene le posizioni di 't' rispettivamente in "arto" e "atrio".
+;; Completa il programma riportato nel riquadro introducendo opportune espressioni negli appositi spazi.
+
+(define lcs ; valore: lista di terne
+  (lambda (u v) ; u, v: stringhe
+    (lcs-rec 0 u 0 v)
+    ))
+
+(define lcs-rec
+  (lambda (i u j v)
+    (cond ((or (string=? u "") (string=? v ""))
+           null)
+          ((char=? (string-ref u 0) (string-ref v 0))
+           (cons (list (+ i 1) (+ j 1) (string-ref u 0))
+                 (lcs-rec (+ i 1) (substring u 1) (+ j 1) (substring v 1)) ))
+          (else
+           (better (lcs-rec (+ i 1) (substring u 1) j v)
+                   (lcs-rec i u (+ j 1) (substring v 1))))
+          )))
+
+(define better
+  (lambda (x y)
+    (if (< (length x) (length y)) y x)
+    ))
+
+(lcs "pino" "pino") ; ((1 1 "p") (2 2 "i") (3 3 "n") (4 4 "o"))
+(lcs "pelo" "peso") ; ((1 1 "p") (2 2 "e") (4 4 "o"))
+(lcs "ala" "palato") ; ((1 2 "a") (2 3 "l") (3 4 "a"))
+(lcs "arto" "atrio") ; ((1 1 "a") (3 2 "t") (4 5 "o"))
+
