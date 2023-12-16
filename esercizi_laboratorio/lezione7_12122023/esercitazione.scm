@@ -119,3 +119,22 @@
 (cyclic-string "abcd" 5)
 (cyclic-string "abcd" 11)
 
+;; 5
+;; Definisci una procedura av in Scheme che, data una lista non vuota (x1 x2 ... xn) i cui n elementi xi appartengono
+;; all’insieme {–1, 0, 1}, restituisca la lista (y1 y2 ... yn–1) di n–1 elementi dello stesso insieme tale che yi = –1 se
+;; xi + xi+1 < 0, yi = 0 se xi + xi+1 = 0 e yi = 1 se xi + xi+1 > 0.
+(define av      ; val: lista di interi -1, 0, 1
+  (lambda (lst) ; lst: lista di interi
+    (if (= (length (cdr lst)) 0)
+        null
+        (let ((sum (+ (car lst) (car (cdr lst)))))
+          (let (
+                (y (cond ((< sum 0) -1) ((> sum 0) 1) (else 0)))
+                )
+            (cons y (av (cdr lst)))
+            )
+          )
+        )
+    ))
+
+(av '(0 0 -1 -1 1 0 0 1 0)) ; (0 -1 -1 0 1 0 1 1)
