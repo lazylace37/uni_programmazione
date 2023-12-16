@@ -99,25 +99,23 @@
 ;; della valutazione per n = 0, 1, 2, 4, 5, 11 deve essere, rispettivamente: "", "a", "ab", "abcd", "abcda",
 ;; "abcdabcdabc".
 
-(define cyclic-string-aux
-  (lambda (pattern l i)
-    (if (= l i)
+(define cyclic-string
+  (lambda (pattern l)
+    (if (= l 0)
         ""
-        (string-append
-         (string (string-ref pattern (remainder i (string-length pattern))))
-         (cyclic-string-aux pattern l (+ i 1))
-         )
+        (let ((ci (modulo (- l 1) (string-length pattern))))
+          (string-append
+           (cyclic-string pattern (- l 1))
+           (string (string-ref pattern ci))
+           )
+          )
         )
     ))
 
-(define cyclic-string
-  (lambda (pattern l)
-    (cyclic-string-aux pattern l 0)
-    ))
+(cyclic-string "abcd" 0)
+(cyclic-string "abcd" 1)
+(cyclic-string "abcd" 2)
+(cyclic-string "abcd" 4)
+(cyclic-string "abcd" 5)
+(cyclic-string "abcd" 11)
 
-(cyclic-string "abdc" 0)
-(cyclic-string "abdc" 1)
-(cyclic-string "abdc" 2)
-(cyclic-string "abdc" 4)
-(cyclic-string "abdc" 5)
-(cyclic-string "abdc" 11)
