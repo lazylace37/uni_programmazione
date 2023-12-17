@@ -217,8 +217,6 @@
 
 (define acc-char-list
   (lambda (word lst)
-    (display lst)
-    (display "\n")
     (if (string=? word "")
         lst
         (acc-char-list (substring word 1) (update-char-list (string-ref word 0) lst))
@@ -234,4 +232,37 @@
 (sorted-char-list "abc")  ; (#\a #\b #\c)
 (sorted-char-list "cba")  ; (#\a #\b #\c)
 (sorted-char-list "list of chars that occur in this text")  ; (#\space #\a #\c #\e #\f #\h #\i #\l #\n #\o #\r #\s #\t #\u #\x)
+
+;; 9
+;; Data una lista di stringhe u, la procedura clean-up restituisce la lista di tutti gli elementi di u, ma in cui ciascun
+;; elemento occorre una volta sola (senza eventuali ripetizioni).
+
+(define in-list?
+  (lambda (el lst)
+    (cond
+      ((null? lst) false)
+      ((string=? el (car lst)) true)
+      (else (in-list? el (cdr lst)))
+      )
+    ))
+
+(define clean-up-aux
+  (lambda (lst unique-lst)
+    (cond
+      ((null? lst) unique-lst)
+      ((equal? (in-list? (car lst) unique-lst) false)
+       (clean-up-aux (cdr lst) (cons (car lst) unique-lst))
+       )
+      (else
+       (clean-up-aux (cdr lst) unique-lst)
+       )
+      )
+    ))
+
+(define clean-up
+  (lambda (lst)
+    (clean-up-aux lst null)
+    ))
+
+(clean-up '("rosa" "garofano" "pervinca" "ciclamino" "genziana" "pervinca" "fiordaliso" "rosa")) ; ("garofano" "ciclamino" "genziana" "pervinca" "fiordaliso" "rosa")
 
