@@ -138,3 +138,100 @@
     ))
 
 (av '(0 0 -1 -1 1 0 0 1 0)) ; (0 -1 -1 0 1 0 1 1)
+
+;; 6
+;; Definisci una procedura shared in Scheme che, date due liste u, v (strettamente) ordinate di numeri interi positivi,
+;; restituisca la lista ordinata degli elementi comuni a u e v.
+
+(define shared    ; val: lista di interi
+  (lambda (u v)   ; u, v: liste (strettamente) ordinate di interi
+    (if (or (null? u) (null? v))
+        null
+        (let ((eu (car u)) (ev (car v)))
+          (cond
+            ((> eu ev) (shared u (cdr v)))
+            ((< eu ev) (shared (cdr u) v))
+            (else
+             (cons eu (shared (cdr u) (cdr v)))
+             )
+            )
+          )
+        )
+    ))
+
+(shared '(1 3 5 6 7 8 9 10) '(0 1 2 3 4 5 7 9)) ; (1 3 5 7 9)
+
+;; 7
+;; Una parola binaria, cioè una stringa composta esclusivamente dai simboli 0 e 1, supera il controllo di parità se il
+;; numero di occorrenze di 1 è pari. Data una lista di parole binarie, la procedura parity-check-failures restituisce
+;; la lista delle posizioni delle parole che non superano il controllo di parità.
+
+(define parity-check?
+  (lambda (word acc)
+    (cond
+      ((string=? word "") (= (remainder acc 2) 0))
+      ((char=? (string-ref word 0) #\0) (parity-check? (substring word 1) (+ acc 1)))
+      (else (parity-check? (substring word 1) acc))
+      )
+    ))
+
+(define parity-check-failures-aux
+  (lambda (lst idx)
+    (cond
+      ((null? lst) null)
+      (else
+       (let
+           ((pass (parity-check? (car lst) 0)))
+         (if pass
+             (parity-check-failures-aux (cdr lst) (+ idx 1))
+             (cons idx (parity-check-failures-aux (cdr lst) (+ idx 1)))
+             )
+         )
+       )
+      )
+    ))
+
+(define parity-check-failures
+  (lambda (lst)
+    (parity-check-failures-aux lst 0)
+    ))
+
+(parity-check-failures '("0111" "1001" "0000" "1010")) ; '(0)
+(parity-check-failures '("0110" "1101" "0000" "1011")) ; '(1 3)
+(parity-check-failures '("0111" "1011" "0100" "1110")) ; '(0 1 2 3)
+(parity-check-failures '("0110" "1001" "0000" "1010")) ; '()
+
+;; 8
+;; Scrivi un programma in Scheme basato sulla procedura sorted-char-list che, data una stringa, restituisce la lista
+;; dei caratteri che vi compaiono, ordinata in ordine alfabetico e senza ripetizioni.
+
+(define update-char-list
+  (lambda (c lst)
+    (cond
+      ((null? lst) (cons c null))
+      ((char<? c (car lst)) (cons c lst))
+      ((char>? c (car lst)) (cons (car lst) (update-char-list c (cdr lst))))
+      (else lst)
+      )
+    ))
+
+(define acc-char-list
+  (lambda (word lst)
+    (display lst)
+    (display "\n")
+    (if (string=? word "")
+        lst
+        (acc-char-list (substring word 1) (update-char-list (string-ref word 0) lst))
+        )
+    ))
+
+(define sorted-char-list
+  (lambda (word)
+    (acc-char-list word null)
+    ))
+
+(sorted-char-list "")  ; ()
+(sorted-char-list "abc")  ; (#\a #\b #\c)
+(sorted-char-list "cba")  ; (#\a #\b #\c)
+(sorted-char-list "list of chars that occur in this text")  ; (#\space #\a #\c #\e #\f #\h #\i #\l #\n #\o #\r #\s #\t #\u #\x)
+
