@@ -266,3 +266,44 @@
 
 (clean-up '("rosa" "garofano" "pervinca" "ciclamino" "genziana" "pervinca" "fiordaliso" "rosa")) ; ("garofano" "ciclamino" "genziana" "pervinca" "fiordaliso" "rosa")
 
+;; 10
+;; Definisci in Scheme una procedura longest-contiguous-repeat che, data una lista (non vuota) s di stringhe,
+;; restituisce la stringa con il maggior numero di occorrenze contigue, cioè una dopo l’altra senza interruzioni, in s. Nei
+;; casi in cui la soluzione non sia unica, è indifferente quale fra le stringhe con questa proprietà venga restituita.
+
+(define longest-contiguous-repeat
+  (lambda (s)
+    (let
+        (
+         (longest-word (car s))
+         (first-el (car (cdr s)))
+         )
+      (cond
+        ((= (length s) 2)
+         (if (> (string-length first-el) (string-length longest-word)) (substring first-el 0 1) (substring longest-word 0 1))
+         )
+        (else
+         (let ((next-el (car (cdr (cdr s)))))
+           (cond
+             (
+              (string=? (substring first-el 0 1) (substring longest-word 0 1))
+              (longest-contiguous-repeat (cons (string-append first-el longest-word) (cdr s)))
+              )
+             (
+              (string=? (substring first-el 0 1) (substring next-el 0 1))
+              (longest-contiguous-repeat (cons longest-word (cons (string-append first-el next-el) (cdr (cdr (cdr s))))))
+              )
+             (
+              (>= (string-length first-el) (string-length longest-word))
+              (longest-contiguous-repeat (cons first-el (cdr (cdr s))))
+              )
+             (else
+              (longest-contiguous-repeat (cons longest-word (cdr (cdr s))))
+              )
+             )
+           ))
+        )
+      )
+    ))
+
+(longest-contiguous-repeat '("a" "b" "b" "a" "a" "b" "c" "c" "c" "c" "b" "b")) ; "c"
