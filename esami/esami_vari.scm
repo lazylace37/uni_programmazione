@@ -137,3 +137,36 @@
 (lscs "arco" "ocra") ; 7
 (lscs "archetipo" "") ; 9
 (lscs "copia" "copia") ; 5
+
+;;
+
+(define R-B-tessellations ; val: lista di liste
+  (lambda (n) ; n: intero non negativo
+    (cond ((= n 0)
+           (list '())
+           )
+          ((= n 1)
+           (list (list #\R) (list #\B))
+           )
+          (else
+           (append
+            (map (add-leftmost-tiles (list #\R #\B))
+                 (R-B-tessellations (- n 2))
+                 )
+            (map (add-leftmost-tiles (list #\B))
+                 (R-B-tessellations (- n 1))
+                 )
+            ))
+          )))
+(define add-leftmost-tiles
+  (lambda (tiles) ; tiles: lista di caratteri
+    (lambda (lst)
+      (append tiles lst)
+      )
+
+
+    ))
+
+(R-B-tessellations 4) ; ( (#\R #\B #\R #\B) (#\R #\B #\B #\R) (#\R #\B #\B #\B)
+; (#\B #\R #\B #\R) (#\B #\R #\B #\B) (#\B #\B #\R #\B)
+; (#\B #\B #\B #\R) (#\B #\B #\B #\B) )
