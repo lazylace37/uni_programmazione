@@ -170,3 +170,37 @@
 (R-B-tessellations 4) ; ( (#\R #\B #\R #\B) (#\R #\B #\B #\R) (#\R #\B #\B #\B)
 ; (#\B #\R #\B #\R) (#\B #\R #\B #\B) (#\B #\B #\R #\B)
 ; (#\B #\B #\B #\R) (#\B #\B #\B #\B) )
+
+;;
+
+(define merge
+  (lambda (u v)
+    (cond
+      ((null? u) v)
+      ((null? v) u)
+      (else (merge-aux u v))
+      )
+    ))
+
+(define merge-aux
+  (lambda (lst acc)
+    (cond
+      ((null? lst) acc)
+      ((in-list? (car lst) acc) (merge-aux (cdr lst) acc))
+      (else (merge-aux (cdr lst) (cons (car lst) acc)))
+      )
+    ))
+
+(define in-list?
+  (lambda (el lst)
+    (cond
+      ((null? lst) false)
+      ((string=? el (car lst)) true)
+      (else (in-list el (cdr lst)))
+      )
+    ))
+
+(merge '("rosa" "garofano" "pervinca" "ciclamino")
+       '("genziana" "pervinca" "fiordaliso" "rosa"))
+;  '("garofano" "ciclamino" "genziana" "pervinca" "fiordaliso" "rosa"))
+
