@@ -204,3 +204,33 @@
        '("genziana" "pervinca" "fiordaliso" "rosa"))
 ;  '("garofano" "ciclamino" "genziana" "pervinca" "fiordaliso" "rosa"))
 
+;;
+
+(define bin-sequences ; val: intero
+  (lambda (n k) ; n ≥ 0, k ≥ 1 interi
+    (seq-rec n k 0)
+    ))
+(define seq-rec
+  (lambda (n k j) ; j: eccedenza di 0 a sinistra (occorrenze di 0 meno occorrenze di 1)
+    (cond ((= n 0)
+           (list "")
+           )
+          ((= j (- k))
+           (map (lambda (x) (string-append "0" x))
+                (seq-rec (- n 1) k (+ j 1)) ))
+          ((= j k)
+           (map (lambda (x) (string-append "1" x))
+                (seq-rec (- n 1) k (- j 1)) ))
+          (else
+           (append
+            (map (lambda (x) (string-append "0" x))
+                 (seq-rec (- n 1) k (+ j 1)) )
+            (map (lambda (x) (string-append "1" x))
+                 (seq-rec (- n 1) k (- j 1)) )
+            ))
+          )))
+
+(bin-sequences 1 2) ; ("0" "1")
+(bin-sequences 2 2) ; ("00" "01" "10" "11")
+(bin-sequences 3 2) ; ("001" "010" "011" "100" "101" "110")
+(bin-sequences 4 1) ; ("0101" "0110" "1001" "1010")
