@@ -1,5 +1,35 @@
 #lang scheme
 
+;; 2
+
+(define standard-form
+  (lambda (lst)
+    (map
+     (lambda (x) (upper-word x))
+     lst
+     )
+    ))
+
+(define upper-word
+  (lambda (w)
+    (let ((x (string-ref w 0)))
+      (if (and (char>=? x #\a) (char<=? x #\z))
+          (string-append
+           (string
+            (integer->char (+ (char->integer x) lo-up-offset))
+            )
+           (substring w 1)
+           )
+          w
+          )
+      )
+    ))
+
+(define lo-up-offset (- (char->integer #\A) (char->integer #\a)))
+
+(standard-form '("abete" "betulla" "faggio" "quercia" "tiglio")) ; ("Abete" "Betulla" "Faggio" "Quercia" "Tiglio")
+(standard-form '("biancoSpino" "Pervinca" "primula" "RODODENDRO" "viola")) ; ("BiancoSpino" "Pervinca" "Primula" "RODODENDRO" "Viola")
+
 ;; 3
 
 (define btd-val
