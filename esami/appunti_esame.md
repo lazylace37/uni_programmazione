@@ -204,3 +204,122 @@ Algoritmo di Euclide per il Massimo Comun Divisore (MCD).
           )
     ))
 ```
+
+\pagebreak
+
+## Commands
+
+### Special Forms
+
+```scheme
+(lambda (s1 . . .) expr 1 expr 2 . . .)
+Creates a new procedure whose formal parameters are s1, s2, . . .
+and whose body is the given list of expressions.
+
+(if test expr 1 expr 2)
+Evaluates test, which is an arbitrary Scheme expression.
+If the resulting value is #f, expr 2 is evaluated; otherwise expr 1 is evaluated.
+
+(cond (test1 elst1) (test2 elst2) . . . [(else elst e)])
+Evaluates each test expression in left-to-right order.
+If test1 evaluates to a true value, then the corresponding sequence of expressions elsti is evaluated,
+and the value of the last expression is returned.
+The optional else clause is evaluated if none of the preceding tests yields a true value.
+
+(and expr . . .)
+Evaluates expressions from left to right, and returns the value of the first expression that returns #f.
+If no expression returns #f, the value of the last expression is returned,
+or #t if there are no expressions.
+
+(or expr . . .)
+Evaluates expressions from left to right, and returns the value of the first expression that returns
+a true value (i.e., not #f). If there are no expressions, or all expressions return #f,
+then the or returns #f.
+
+(let ((s1 texpr 1) (s2 texpr 2) . . .) expr 1 expr 2 . . .)
+Evaluate expr 1 , expr 2, . . . in an environment with s1 bound to the value of texpr 1 ,
+s2 bound to the value of texpr 2, etc.
+```
+
+### Standard Procedures
+
+#### Equality Testing
+
+```scheme
+(= n1 n2 . . .)
+Returns #t if n1 = n2 = . . .. Note that this works only for numbers
+```
+
+### List Structure Operations
+
+```scheme
+(null? x) Returns #t if x is the empty list ’(), #f for any other Scheme object.
+(cons x y) Creates a new pair (of type <pair>) whose car is x and whose cdr is y.
+(car c) Returns the first element of c.
+(cdr c) Returns the second element of c.
+(list expr 1 expr 2 . . .) Create a new list consisting of the values of the given expressions.
+(length lst) Return the number of elements in the given list.
+(append lst1 lst2) Append the two lists together, and return the resulting list.
+(reverse lst) Return a new list which has same elements as lst, but in the opposite order.
+```
+
+### Arithmetic and Numeric Operators
+
+```scheme
+(= n1 n2 . . .) (< n1 n2 . . .) (> n1 n2 . . .) (<= n1 n2 . . .) (>= n1 n2 . . .)
+Tests whether a sequence of numerical values are, respectively, equal, strictly increasing,
+strictly decreasing, nondecreasing, or non-increasing.
+(+ n1 n2 . . .) Addition.
+(- n1 n2 . . .) Subtraction (negation, with a single argument).
+(* n1 n2 . . .) Multiplication.
+(/ n1 n2 . . .) Real or rational division (associates to the right).
+(quotient n1 n2 . . .) Quotient from integer division
+(remainder n1 n2 . . .) Remainder from integer division
+(modulo n1 n2 . . .) Least non-negative residue of remainder.
+(abs n) Absolute value.
+(min n1 n2 . . .) (max n1 n2 . . .) Returns the smallest (largest) value among the given numeric values.
+(sqrt n) Square root.
+(expt n1 n2) Computes n^n2
+(floor n) Returns the largest integer not greater than n.
+(ceiling n) Returns the smallest integer not less than n.
+```
+
+### Higher-Order Procedures
+
+```scheme
+(map f lst 1 lst2 . . .)
+Apply f to each element of all the input lists, in some order, and collect the return values into a list,
+which is returned from map.
+```
+
+### Chars and Strings
+
+```scheme
+(char? obj) It returns #t if obj is a character.
+(char=? c1 c2) It returns #t if c1 and c2 are the same character.
+(char->integer c) It converts c to the corresponding integer (character code).
+Example: (char->integer #\a) -> 97
+(integer->char n) It converts an integer to the corresponding character.
+(char<? c1 c2)
+(char<=? c1, c2)
+(char> c1 c2)
+(char>= c1 c2)
+    These functions compare characters. Actually, the functions compare the size of the character codes.
+    For instance, (char<? c1 c2) is equal to (< (char->integer c1) (char->integer c2)) .
+
+(string? s) It returns #t if s is a string.
+(make-string n c) It returns a string consisting of n of characters c. The character c can be omitted.
+(string-length s) It returns the length of a string s.
+(string=? s1 s2) It returns #t if strings s1 and s2 are the same.
+(string-ref s idx) It returns the idx-th character (counting from 0) of a string s.
+(substring s start end) It returns a substring of s consisting of characters from start to (end-1).
+                        (substring "abcdefg" 1 4) -> "bcd"
+(string-append s1 s2 ...) It connects strings s1, s2 ....
+```
+
+## Misc
+
+```scheme
+(list (char->integer #\A) (char->integer #\Z) (char->integer #\a) (char->integer #\z))
+'(65 90 97 122)
+```
