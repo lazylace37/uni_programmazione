@@ -323,3 +323,66 @@ Example: (char->integer #\a) -> 97
 (list (char->integer #\A) (char->integer #\Z) (char->integer #\a) (char->integer #\z))
 '(65 90 97 122)
 ```
+
+\pagebreak
+
+### Cifrario di Cesare
+
+```scheme
+(define cifr-cesare  ; val: procedura [ char -> char]
+  (lambda (rot)      ; rot: intero non negativo
+    (lambda (c)      ; c: char (lettera maiuscola)
+      (let ((a (+ (char->integer c) rot)))
+        (if (<= a aZ) (integer->char a) (integer->char (- a 26)))
+        )
+      )
+    ))
+
+(crittazione "ALEAIACTAEST" (cifr-cesare 3))
+
+;; Argomenti e valori procedurali
+
+(define reg-decrittazione    ; val: procedura [ char -> char]
+  (lambda (rgl)              ; rgl: procedura [ char -> char]
+    (let ((rot (- (char->integer (rgl #\A)) aA)))
+      (cifr-cesare (- 26 rot))
+      )
+    ))
+
+(crittazione
+ (crittazione "ALEAIACTAEST" (cifr-cesare 6))
+ (reg-decrittazione (cifr-cesare 6))
+ )
+```
+
+### map applicato a lcs
+
+```scheme
+(define all-lcs      ; val: lista di stringhe
+  (lambda (s1 s2)    ; s1, s2: stringhe
+    (cond
+      ((or (= (string-length s1) 0) (= (string-length s2) 0)) (list ""))
+      ((char=? (string-ref s1 0) (string-ref s2 0))
+       (map
+        (lambda (s) (string-append (substring s1 0 1) s))
+        (all-lcs (substring s1 1) (substring s2 1))
+        )
+       )
+      (else
+       (all-longer-string (all-lcs (substring s1 1) s2) (all-lcs s1 (substring s2 1)))
+       ))
+    ))
+
+(define all-longer-string    ; val: lista di stringhe
+  (lambda (l1 l2)            ; l1, l2: liste di stringhe
+    (let ((s1l (string-length (car l1))) (s2l (string-length (car l2))))
+      (cond
+        ((> s1l s2l) l1)
+        ((< s1l s2l) l2)
+        (else (append l1 l2))
+        )
+      ))
+  )
+
+(all-lcs "arto" "atrio")
+```
