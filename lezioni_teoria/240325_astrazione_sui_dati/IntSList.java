@@ -1,4 +1,3 @@
-package AstrazioneSuiDati;
 /**
  * Liste di interi nello stile di Scheme
  *
