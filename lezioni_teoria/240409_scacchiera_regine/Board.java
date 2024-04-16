@@ -5,7 +5,7 @@
  *
  * <p>b.queensOn() : int
  *
- * <p>b.underattack(i, j) : boolean
+ * <p>b.underAttack(i, j) : boolean
  *
  * <p>b.addQueen(i, j) : Board
  *
@@ -22,7 +22,7 @@ public class Board {
     return 0;
   }
 
-  public boolean underattack(int i, int j) {
+  public boolean underAttack(int i, int j) {
     return false;
   }
 

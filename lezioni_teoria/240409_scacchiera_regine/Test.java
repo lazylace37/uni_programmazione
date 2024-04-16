@@ -12,7 +12,7 @@ public class Test {
       int i = q + 1;
       int count = 0;
       for (int j = 1; j <= n; j++) {
-        if (!b.underattack(i, j)) {
+        if (!b.underAttack(i, j)) {
           count += numCompletamenti(b.addQueen(i, j));
         }
       }
@@ -33,7 +33,7 @@ public class Test {
   //     int i = q + 1;
   //     BoardSList list = BoardSList.NULL_BOARDLIST;
   //     for (int j = 1; j <= n; j++) {
-  //       if (!b.underattack(i, j)) {
+  //       if (!b.underAttack(i, j)) {
   //         list.append(numCompletamenti(b.addQueen(i, j)));
   //       }
   //     }
