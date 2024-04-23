@@ -58,10 +58,10 @@ public class Llcs {
     }
     for (int x = 1; x < i + 1; x++) {
       for (int y = 1; y < j + 1; y++) {
-        if (u.charAt(0) == v.charAt(0)) {
+        if (u.charAt(i - x) == v.charAt(j - y)) {
           h[x][y] = h[x - 1][y - 1] + 1;
         } else {
-          h[x][y] = h[x - 1][y] + h[x][y - 1];
+          h[x][y] = Math.max(h[x - 1][y], h[x][y - 1]);
         }
       }
     }
@@ -79,17 +79,10 @@ public class Llcs {
       v = args[1];
     }
 
-    long t = System.currentTimeMillis();
-    long nSolutions = llcsMem(u, v);
-    System.out.println(
-        "llcsMem("
-            + u
-            + ", "
-            + v
-            + ") = "
-            + nSolutions
-            + " in "
-            + (System.currentTimeMillis() - t)
-            + "ms");
+    long nSolutionsTopDown = llcsMem(u, v);
+    long nSolutionsBottomUp = llcsBottomUp(u, v);
+    assert nSolutionsTopDown == nSolutionsBottomUp;
+    System.out.println("llcsMem(" + u + ", " + v + ") = " + nSolutionsTopDown);
+    System.out.println("llcsBottomUp(" + u + ", " + v + ") = " + nSolutionsBottomUp);
   }
 }
