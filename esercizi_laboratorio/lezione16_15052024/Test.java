@@ -45,10 +45,13 @@ public class Test {
   public static void main(String[] args) {
     test();
 
-    int n = 2;
+    // int n = 2;
+    // Puzzle puzzle = new Puzzle(n);
+
+    int n = 4;
+    Puzzle puzzle = new Puzzle(new int[] {1, 6, 2, 3, 13, 0, 7, 4, 8, 5, 11, 15, 14, 9, 10, 12});
     PuzzleBoard gui = new PuzzleBoard(n);
-    Puzzle puzzle = new Puzzle(n);
-    // Puzzle puzzle = new Puzzle(new int[] {1, 6, 2, 3, 13, 0, 7, 4, 8, 5, 11, 15, 14, 9, 10, 12});
+
     plotPuzzle(puzzle, gui);
 
     while (!puzzle.isOrdered()) {
