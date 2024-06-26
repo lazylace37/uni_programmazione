@@ -105,7 +105,6 @@ public class BottomUpLIS {
       // Nota Gioele: questo non mi serve per come ho impostato le cose,
       // perché sono un'iterazione indietro.
       // Cioè questo t è il prossimo elemento di s.
-      // Il vantaggio è che s[i] != 0 sempre.
 
       // --------------------------------------------------
       //  Inserisci qui strutture di controllo e comandi
@@ -113,7 +112,7 @@ public class BottomUpLIS {
       //  attraverso la matrice in modo da ricostruire in
       //  r una possibile LIS relativa alla sequenza s
       // --------------------------------------------------
-      if (mem[i][j] > mem[i + 1][j]) {
+      if (mem[i][j] == mem[i + 1][j] + 1) {
         r[rIdx++] = s[i];
         j = i;
       } else {
