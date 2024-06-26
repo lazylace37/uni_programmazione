@@ -31,8 +31,6 @@ public class RoundTable {
 
   // disposizione risultante dopo aver servito il prossimo cavaliere, che esce
   public RoundTable serveNeighbour() {
-    // System.out.println(this.jug + " - " + this.l1 + this.l2);
-    // System.out.println("\nserveNeighbour");
     if (this.l1.isNull()) {
       IntSList r = this.l2.reverse();
       return new RoundTable(
@@ -49,8 +47,6 @@ public class RoundTable {
 
   // disposizione risultante dopo aver passato la brocca
   public RoundTable passJug() {
-    // System.out.println(this.jug + " - " + this.l1 + this.l2);
-    // System.out.println("\npassJug");
     if (this.numberOfKnights() == 2) return this;
     if (this.l1.length() == 1) {
       IntSList r = this.l2.reverse().cons(this.l1.car());
