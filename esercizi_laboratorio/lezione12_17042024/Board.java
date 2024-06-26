@@ -10,6 +10,7 @@ public class Board {
   private final IntSList diagonalDec;
   private final String config;
 
+  // creazione di una scacchiera nxn vuota
   public Board(int n) {
     this.size = n;
     this.queens = 0;
@@ -37,14 +38,17 @@ public class Board {
     this.config = b.arrangement() + COLS.charAt(j) + ROWS.charAt(i) + " ";
   }
 
+  // dimensione della scacchiera
   public int size() {
     return this.size;
   }
 
+  // numero di regine collocate sulla scacchiera
   public int queensOn() {
     return this.queens;
   }
 
+  // la posizione di coordinate <i, j> è minacciata?
   public boolean underAttack(int i, int j) {
     IntSList rows_ = this.rows;
     while (!rows_.isNull()) {
@@ -73,6 +77,8 @@ public class Board {
     return false;
   }
 
+  // nuova scacchiera con una regina in posizione <i, j>
+  // che si aggiunge alla configurazione di b
   public Board addQueen(int i, int j) {
     return new Board(
         this,
@@ -84,6 +90,7 @@ public class Board {
         this.diagonalDec.cons(i + j));
   }
 
+  // codifica testuale della configurazione
   public String arrangement() {
     return this.config;
   }

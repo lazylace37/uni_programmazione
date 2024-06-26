@@ -105,7 +105,7 @@ public class Queens {
   public static void main(String args[]) {
     if (args.length > 0) {
       int n = Integer.parseInt(args[0]);
-      System.out.println(numberOfSolutions(n));
+      System.out.println("Board " + n + "x" + n + " has " + numberOfSolutions(n) + " solutions");
     } else {
       assert numberOfSolutions(1) == 1;
       assert numberOfSolutions(2) == 0;
